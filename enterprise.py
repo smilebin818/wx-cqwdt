@@ -24,9 +24,9 @@ def application(environ, start_response):
     echostr   = d.get('echostr', None)     # 随机字符串 (返回给腾讯进行token验证用)
 
     signature = signature[0] if signature else signature
-    timestamp = signature[0] if signature else signature
-    nonce     = signature[0] if signature else signature
-    echostr   = signature[0] if signature else signature
+    timestamp = timestamp[0] if timestamp else timestamp
+    nonce     = nonce[0] if nonce else nonce
+    echostr   = echostr[0] if echostr else echostr
 
     # 验证服务器地址的有效性
     if wechat.check_signature(signature, timestamp, nonce):
