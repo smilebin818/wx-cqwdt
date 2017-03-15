@@ -19,17 +19,17 @@ def application(environ, start_response):
 
     # 取得
     signature = d.get('signature', None)   # 微信加密签名
-    timestmap = d.get('timestmap', None)   # 时间戳
+    timestamp = d.get('timestamp', None)   # 时间戳
     nonce     = d.get('nonce', None)       # 随机数
     echostr   = d.get('echostr', None)     # 随机字符串 (返回给腾讯进行token验证用)
 
     signature = signature[0] if signature else signature
-    timestmap = signature[0] if signature else signature
+    timestamp = signature[0] if signature else signature
     nonce     = signature[0] if signature else signature
     echostr   = signature[0] if signature else signature
 
     # 验证服务器地址的有效性
-    if wechat.check_signature(signature, timestmap, nonce):
+    if wechat.check_signature(signature, timestamp, nonce):
         # do OK thing
         print "验证服务器地址的有效性(成功)"  
 
