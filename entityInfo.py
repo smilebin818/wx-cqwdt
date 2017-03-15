@@ -12,7 +12,7 @@ conf = WechatConf(
     token='smilebinToken', 
     appid='wx692ad34a8ba6feff', 
     appsecret='cabff21c726d3b2b2a9ae94d9daa039a', 
-    encrypt_mode='safe',  # 可选项：normal/compatible/safe，分别对应于 明文/兼容/安全 模式
+    encrypt_mode='normal',  # 可选项：normal/compatible/safe，分别对应于 明文/兼容/安全 模式
     encoding_aes_key='NyI5ok2QSd59c3MheyDfWpzHen3KmY3bwc8noyBkFHg'  # 如果传入此值则必须保证同时传入 token, appid
 )
 

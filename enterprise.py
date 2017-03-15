@@ -6,6 +6,21 @@ from cgi import parse_qs, escape
 
 import entityInfo
 
+def getRequestBody(environ):
+    # the environment variable CONTENT_LENGTH may be empty or missing
+    try:
+        request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+
+    except (ValueError):
+        request_body_size = 0
+
+    # When the method is POST the query string will be sent
+    # in the HTTP request body which is passed by the WSGI server
+    # in the file like wsgi.input environment variable.
+    request_body = environ['wsgi.input'].read(request_body_size)
+
+    return request_body
+
 # 实例化 WechatBasic 官方接口类
 wechat = WechatBasic(conf=entityInfo.conf)
 
@@ -29,18 +44,28 @@ def application(environ, start_response):
     echostr   = echostr[0] if echostr else echostr
 
     # 验证服务器地址的有效性
-    if wechat.check_signature(signature, timestamp, nonce):
-        # do OK thing
-        print "验证服务器地址的有效性(成功)"  
+    if echostr:
+        if wechat.check_signature(signature, timestamp, nonce):
+            # do OK thing
+            print "验证服务器地址的有效性(成功)"
 
-        createMenu()
+            return echostr or ""
+        else:
+            # do err process
+            print "验证服务器地址的有效性(失败)"
 
-        return echostr
-    else:
-        # do err process
-        print "验证服务器地址的有效性(失败)"    
+            return ""
 
-        return None
+    request_body = getRequestBody(environ)
+
+    print request_body
+
+    data = request_body['data']
+
+    wechat.parse_data(data)
+    wechat.response_text("hahhahahaha")
+
+    return ""
 
 def createMenu():
 
