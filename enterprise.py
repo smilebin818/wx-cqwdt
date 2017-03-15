@@ -58,14 +58,13 @@ def application(environ, start_response):
 
     request_body = getRequestBody(environ)
 
-    print request_body
+    data = request_body # ['data']
 
-    data = request_body['data']
+    text_from_user = wechat.parse_data(data)
 
-    wechat.parse_data(data)
-    wechat.response_text("hahhahahaha")
+    text_to_user = wechat.response_text("开发不出来了，不要期待了。。。")
 
-    return ""
+    return text_to_user.encode("utf-8")
 
 def createMenu():
 
