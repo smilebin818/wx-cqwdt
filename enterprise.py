@@ -4,6 +4,9 @@
 from wechat_sdk import WechatBasic
 from cgi import parse_qs, escape
 
+import urllib, urllib2
+import json
+
 import entityInfo
 
 # 实例化 WechatBasic 官方接口类
