@@ -6,21 +6,6 @@ from cgi import parse_qs, escape
 
 import entityInfo
 
-def getRequestBody(environ):
-    # the environment variable CONTENT_LENGTH may be empty or missing
-    try:
-        request_body_size = int(environ.get('CONTENT_LENGTH', 0))
-
-    except (ValueError):
-        request_body_size = 0
-
-    # When the method is POST the query string will be sent
-    # in the HTTP request body which is passed by the WSGI server
-    # in the file like wsgi.input environment variable.
-    request_body = environ['wsgi.input'].read(request_body_size)
-
-    return request_body
-
 # 实例化 WechatBasic 官方接口类
 wechat = WechatBasic(conf=entityInfo.conf)
 
@@ -57,16 +42,40 @@ def application(environ, start_response):
             return ""
 
     request_body = getRequestBody(environ)
-
-    data = request_body # ['data']
+    data = request_body
 
     text_from_user = wechat.parse_data(data)
+    # text_to_user = wechat.response_text("开发不出来了，不要期待了。。。")
 
-    text_to_user = wechat.response_text("开发不出来了，不要期待了。。。")
+    # 图灵机器人接口
+    text_to_user = wechat.response_text(tuling(text_from_user))
 
     return text_to_user.encode("utf-8")
 
-def createMenu():
+def getRequestBody(environ):
+    # the environment variable CONTENT_LENGTH may be empty or missing
+    try:
+        request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+
+    except (ValueError):
+        request_body_size = 0
+
+    # When the method is POST the query string will be sent
+    # in the HTTP request body which is passed by the WSGI server
+    # in the file like wsgi.input environment variable.
+    request_body = environ['wsgi.input'].read(request_body_size)
+
+    return request_body
+
+def tuling(text):
+    url = "http://www.tuling123.com/openapi/api?key=77aa5b955fcab122b096f2c2dd8434c8&info={0}".format(text)
+    content = urllib2.urlopen(url)
+    content = json.loads(content.read())
+
+    return content["text"]
+
+
+# def createMenu():
 
     # 获取 access_token
     # getAccessToken = wechat.get_access_token()
@@ -74,4 +83,4 @@ def createMenu():
     # access_token = getAccessToken.get('access_token', None)
     # access_token = access_token[0] if access_token else access_token
 
-    wechat.create_menu(entityInfo.menu_data)
+    # wechat.create_menu(entityInfo.menu_data)
