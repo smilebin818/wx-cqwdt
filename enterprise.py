@@ -47,7 +47,10 @@ def application(environ, start_response):
     request_body = getRequestBody(environ)
     data = request_body
 
-    text_from_user = wechat.parse_data(data)
+    wechat.parse_data(data)
+
+    text_from_user = wechat.message.content.encode("utf-8")
+
     # text_to_user = wechat.response_text("开发不出来了，不要期待了。。。")
 
     # 图灵机器人接口
