@@ -53,6 +53,12 @@ def application(environ, start_response):
 
     # text_to_user = wechat.response_text("开发不出来了，不要期待了。。。")
 
+    # 百度地图接口
+    frombaidu("shishi")
+
+
+
+
     # 图灵机器人接口
     text_to_user = wechat.response_text(tuling(text_from_user))
 
@@ -79,6 +85,25 @@ def tuling(text):
     content = json.loads(content.read())
 
     return content["text"]
+
+
+
+def frombaidu(text):
+    origin = "origin=光电园" #encode("utf-8")          # 起点名称
+    destination = "&destination=花卉园" #.encode("utf-8")     # 终点名称
+    mode = "&transit"
+    region = "&region=重庆"  #.encode("utf-8")
+    origin_region = "&origin_region=重庆"  #.encode("utf-8")
+    destination_region = "&destination_region=重庆"   #.encode("utf-8")
+    output = "&output=json"
+    akstr = "&ak=1ce6987ff4bbe857f40cfaf6b99cd050" 
+   
+    url = "http://api.map.baidu.com/direction/v1?" + origin + destination + mode + region + origin_region + destination_region + output + akstr
+
+    content = urllib2.urlopen(url)
+    content = json.loads(content.read())
+
+    return content
 
 
 # def createMenu():
