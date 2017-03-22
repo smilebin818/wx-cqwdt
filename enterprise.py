@@ -8,6 +8,7 @@ import urllib, urllib2
 import json
 
 import entityInfo
+import cqwdtDBManager
 
 # 实例化 WechatBasic 官方接口类
 wechat = WechatBasic(conf=entityInfo.conf)
@@ -44,25 +45,89 @@ def application(environ, start_response):
 
             return ""
 
-    request_body = getRequestBody(environ)
-    data = request_body
+    # 解析用户信息
+    wechat.parse_data(getRequestBody(environ))
 
-    wechat.parse_data(data)
-
+    # 获得的用户输入信息
     text_from_user = wechat.message.content.encode("utf-8")
 
-    # text_to_user = wechat.response_text("开发不出来了，不要期待了。。。")
+    # 返回给用户的信息
+    text_to_user = ""
+    
+    # 用户信息中是否包含“到”的关键字
+    stationList = text_from_user.split(entityInfo.direction_key)
 
-    # 百度地图接口
-    frombaidu("shishi")
+    # 单一站点，返回用户该站点的首末班时刻表
+    if len(stationList) = 1:
+        text_to_user = getInfoToUser(stationList[0].strip())
 
+    # 站点到站点：红旗河沟到光电园  返回换乘路径（调用百度API）
+    else:
+        text_to_user = "站点到站点的功能\n目前还在调试中"
 
-
-
-    # 图灵机器人接口
-    text_to_user = wechat.response_text(tuling(text_from_user))
+    text_to_user = wechat.response_text(text_to_user, "true")
 
     return text_to_user.encode("utf-8")
+
+
+def getInfoToUser(text):
+    return_text = ""
+
+    # 根据用户输入的信息进行数据库查询该站名是否存在，并返回对应的车站信息
+    station_name_result = cqwdtDBManager.select_station_by_station_name(text)
+
+    rows_for_return = []
+
+    # 返回结果为零件
+    if station_name_result[entityInfo.CODE] == FROMDBSETECT_ZERO:
+        # 进行模糊查询
+        sel_station_like_name_return = cqwdtDBManager.select_station_like_station_name(text)
+
+        if sel_station_like_name_return[entityInfo.CODE] == FROMDBSETECT_ZERO:
+            # 利用图灵机器人进行对话
+            return_text = tuling(text_from_user)
+
+        if sel_station_like_name_return[entityInfo.CODE] == FROMDBSETECT_ONE:
+            # 如果有一个匹配的站点，就将该站点进行返回
+            stationList = station_name_result['station_list']
+            station_name = stationList[0]["station_name"]
+
+            # 回调自身函数查询该站点的信息
+            getInfoToUser(station_name)
+
+        elif sel_station_like_name_return[entityInfo.CODE] == FROMDBSETECT_MORE:：
+            # 编辑多件站点返回给用户，让用户确认输入完整站名
+            stationList = station_name_result['station_list']
+
+            rows_for_return.append("请输入完整的站名,参考如下：\n")
+
+            for station_info in stationList:
+                #station_info = list(station_info)
+
+                rows_for_return.append(station_info["station_id"])
+                rows_for_return.append(":")
+                rows_for_return.append(station_info["station_name"])
+                rows_for_return.append("\n")
+
+            return_text = return_text.json(rows_for_return)
+
+    # 返回结果为一件或者多件的场合
+    elif station_name_result[entityInfo.CODE] == FROMDBSETECT_MORE:
+        # 查询该站名的首末班车
+        stationList = station_name_result['station_info']
+
+        rows_for_return.append("车站名: {0}\n".format(text))
+
+        for station_info in stationList:
+            rows_for_return.append("-----------------\n")
+            rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))
+            rows_for_return.append("方向　: {0}\n".format(station_info["direction"]))
+            rows_for_return.append("首班车: {0}\n".format(station_info["weekday_first_time"]))
+            rows_for_return.append("末班车: {0}\n".format(station_info["weekday_last_time"]))
+
+        return_text = return_text.json(rows_for_return)
+
+    return return_text
 
 def getRequestBody(environ):
     # the environment variable CONTENT_LENGTH may be empty or missing
@@ -85,26 +150,6 @@ def tuling(text):
     content = json.loads(content.read())
 
     return content["text"]
-
-
-
-def frombaidu(text):
-    origin = "origin=光电园" #encode("utf-8")          # 起点名称
-    destination = "&destination=花卉园" #.encode("utf-8")     # 终点名称
-    mode = "&transit"
-    region = "&region=重庆"  #.encode("utf-8")
-    origin_region = "&origin_region=重庆"  #.encode("utf-8")
-    destination_region = "&destination_region=重庆"   #.encode("utf-8")
-    output = "&output=json"
-    akstr = "&ak=1ce6987ff4bbe857f40cfaf6b99cd050" 
-   
-    url = "http://api.map.baidu.com/direction/v1?" + origin + destination + mode + region + origin_region + destination_region + output + akstr
-
-    content = urllib2.urlopen(url)
-    content = json.loads(content.read())
-
-    return content
-
 
 # def createMenu():
 
