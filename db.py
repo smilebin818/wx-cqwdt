@@ -31,7 +31,7 @@ class CqwdtDBManager:
     # 根据车站名称进行模糊查询
     def select_station_like_station_name(self, station_name):
         return self.c.execute("SELECT * FROM station st WHERE st.station_name LIKE '%{0}%'".format(station_name)).fetchall()
-
+ 
     def closeDB(self):
         self.db.commit()
         self.db.close()

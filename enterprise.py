@@ -55,10 +55,10 @@ def application(environ, start_response):
     text_to_user = ""
     
     # 用户信息中是否包含“到”的关键字
-    stationList = text_from_user.split(entityInfo.direction_key)
+    stationList = text_from_user.split(entityInfo.direction_key.encode("utf-8"))
 
     # 单一站点，返回用户该站点的首末班时刻表
-    if len(stationList) = 1:
+    if len(stationList) == 1:
         text_to_user = getInfoToUser(stationList[0].strip())
 
     # 站点到站点：红旗河沟到光电园  返回换乘路径（调用百度API）
@@ -95,7 +95,7 @@ def getInfoToUser(text):
             # 回调自身函数查询该站点的信息
             getInfoToUser(station_name)
 
-        elif sel_station_like_name_return[entityInfo.CODE] == FROMDBSETECT_MORE:：
+        elif sel_station_like_name_return[entityInfo.CODE] == FROMDBSETECT_MORE:
             # 编辑多件站点返回给用户，让用户确认输入完整站名
             stationList = station_name_result['station_list']
 
