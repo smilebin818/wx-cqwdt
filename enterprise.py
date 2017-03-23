@@ -84,11 +84,11 @@ def getInfoToUser(text):
         # 进行模糊查询
         station_like_name_return = cqwdtDBManager.select_station_like_station_name(text)
 
-        stationLikeList = station_by_name_result['station_list']
+        stationLikeList = station_like_name_return['station_list']
 
         if len(stationLikeList) == 0:
             # 利用图灵机器人进行对话
-            return_text = tuling(text_from_user)
+            return_text = tuling(text)
 
         if len(stationLikeList) == 1:
             # 如果有一个匹配的站点，就将该站点进行返回
