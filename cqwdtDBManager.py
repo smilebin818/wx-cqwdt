@@ -7,6 +7,8 @@ import entityInfo
 
 
 def select_station_by_station_name(station_name):
+    dict_for_return = []
+
     dbMgr = CqwdtDBManager("cqwdt")
 
     stationList = dbMgr.select_station_by_station_name(station_name)
