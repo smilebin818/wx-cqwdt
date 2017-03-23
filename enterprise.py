@@ -102,6 +102,7 @@ def getInfoToUser(text):
             stationNewList = getNotIterateList(stationLikeList)
 
             if len(stationNewList) == 1:
+                station_name = stationNewList[0]["station_name"]
                 # 回调自身函数查询该站点的信息
                 return getInfoToUser(station_name)
             else:
