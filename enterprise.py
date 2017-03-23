@@ -107,7 +107,7 @@ def getInfoToUser(text):
                 return getInfoToUser(station_name)
             else:
                 # 编辑多件站点返回给用户，让用户确认输入完整站名
-                rows_for_return.append("请输入完整的站名,参考如下：\n")
+                rows_for_return.append("请输入完整的站名,如下：\n")
 
                 for station_info in stationLikeList:
                     #station_info = list(station_info)
@@ -124,13 +124,13 @@ def getInfoToUser(text):
         # 返回该站名的首末班车
         rows_for_return.append("车站名: {0}\n".format(text))
 
-        if stationList[0]["open_traffic"] == 0:
+        if int(stationList[0]["open_traffic"]) == 0:
             rows_for_return.append("※该站点目前尚未有开通")
         else:
             for station_info in stationList:
-                rows_for_return.append("-----------------\n")
+                rows_for_return.append("--------------------\n")
                 rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))
-                rows_for_return.append("方向　: {0}\n".format(station_info["direction"]))
+                rows_for_return.append("方　向: {0}\n".format(station_info["direction"]))
                 rows_for_return.append("首班车: {0}\n".format(station_info["weekday_first_time"]))
                 rows_for_return.append("末班车: {0}\n".format(station_info["weekday_last_time"]))
 
