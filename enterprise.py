@@ -95,19 +95,26 @@ def getInfoToUser(text):
             station_name = stationLikeList[0]["station_name"]
 
             # 回调自身函数查询该站点的信息
-            getInfoToUser(station_name)
+            return getInfoToUser(station_name)
 
         elif len(stationLikeList) > 1:
-            # 编辑多件站点返回给用户，让用户确认输入完整站名
-            rows_for_return.append("请输入完整的站名,参考如下：\n")
+            # 判断模糊查询出来的结果是否是同一个站点： 例如(关键字[红旗]进行查询会出现 322：红旗河沟  612：红旗河沟)
+            stationNewList = getNotIterateList(stationLikeList)
 
-            for station_info in stationLikeList:
-                #station_info = list(station_info)
+            if len(stationNewList) == 1:
+                # 回调自身函数查询该站点的信息
+                return getInfoToUser(station_name)
+            else:
+                # 编辑多件站点返回给用户，让用户确认输入完整站名
+                rows_for_return.append("请输入完整的站名,参考如下：\n")
 
-                rows_for_return.append(station_info["station_id"])
-                rows_for_return.append(":")
-                rows_for_return.append(station_info["station_name"])
-                rows_for_return.append("\n")
+                for station_info in stationLikeList:
+                    #station_info = list(station_info)
+
+                    rows_for_return.append(station_info["station_id"])
+                    rows_for_return.append(":")
+                    rows_for_return.append(station_info["station_name"])
+                    rows_for_return.append("\n")
 
             return_text = "".join(rows_for_return)
 
@@ -145,12 +152,27 @@ def getRequestBody(environ):
 
     return request_body
 
+# 得到一个list里面不重复的数据
+def getNotIterateList(stationList):
+    d = {}
+    ret = []
+
+    for station in stationList:
+        if station["station_name"] not in d:
+            d[station["station_name"]] = True
+            ret.append(station)
+        else:
+            pass
+
+    return ret
+
 def tuling(text):
     url = "http://www.tuling123.com/openapi/api?key=77aa5b955fcab122b096f2c2dd8434c8&info={0}".format(text)
     content = urllib2.urlopen(url)
     content = json.loads(content.read())
 
     return content["text"]
+
 
 # def createMenu():
 
