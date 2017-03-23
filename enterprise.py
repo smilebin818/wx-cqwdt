@@ -109,7 +109,7 @@ def getInfoToUser(text):
                 rows_for_return.append(station_info["station_name"])
                 rows_for_return.append("\n")
 
-            return_text = return_text.json(rows_for_return)
+            return_text = "".join(rows_for_return)
 
     # 返回结果为一件或者多件的场合
     elif len(stationList) > 0:
@@ -126,7 +126,7 @@ def getInfoToUser(text):
                 rows_for_return.append("首班车: {0}\n".format(station_info["weekday_first_time"]))
                 rows_for_return.append("末班车: {0}\n".format(station_info["weekday_last_time"]))
 
-        return_text = return_text.json(rows_for_return)
+            return_text = "".join(rows_for_return)
 
     return return_text
 
