@@ -125,7 +125,11 @@ def getInfoToUser(text):
         rows_for_return.append("车站名: {0}\n".format(text))
 
         if int(stationList[0]["open_traffic"]) == 0:
+            rows_for_return.append("--------------------\n")
+            rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))
             rows_for_return.append("※该站点目前尚未有开通")
+
+            return_text = "".join(rows_for_return)
         else:
             for station_info in stationList:
                 rows_for_return.append("--------------------\n")
