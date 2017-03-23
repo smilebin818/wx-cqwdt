@@ -9,7 +9,7 @@ import entityInfo
 def select_station_by_station_name(station_name):
     dbMgr = CqwdtDBManager("cqwdt")
 
-    stationList = dict(dbMgr.select_station_by_station_name(station_name))
+    stationList = dbMgr.select_station_by_station_name(station_name)
 
     if len(stationList) == 0:
         dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_ZERO
@@ -25,7 +25,7 @@ def select_station_by_station_name(station_name):
 def select_station_like_station_name(station_name):
     dbMgr = CqwdtDBManager("cqwdt")
 
-    stationList = dict(dbMgr.select_station_like_station_name(station_name))
+    stationList = dbMgr.select_station_like_station_name(station_name)
 
     if len(stationList) == 0:
         dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_ZERO
