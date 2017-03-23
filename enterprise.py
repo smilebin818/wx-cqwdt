@@ -72,36 +72,36 @@ def application(environ, start_response):
 
 def getInfoToUser(text):
     return_text = ""
-
-    # 根据用户输入的信息进行数据库查询该站名是否存在，并返回对应的车站信息
-    station_name_result = cqwdtDBManager.select_station_by_station_name(text)
-
     rows_for_return = []
 
-    # 返回结果为零件
-    if station_name_result[entityInfo.CODE] == FROMDBSETECT_ZERO:
-        # 进行模糊查询
-        sel_station_like_name_return = cqwdtDBManager.select_station_like_station_name(text)
+    # 根据用户输入的信息进行数据库查询该站名是否存在，并返回对应的车站信息
+    station_by_name_result = cqwdtDBManager.select_station_by_station_name(text)
 
-        if sel_station_like_name_return[entityInfo.CODE] == FROMDBSETECT_ZERO:
+    stationList = station_by_name_result['station_list']
+
+    # 返回结果为零件
+    if len(stationList) == 0:
+        # 进行模糊查询
+        station_like_name_return = cqwdtDBManager.select_station_like_station_name(text)
+
+        stationLikeList = station_by_name_result['station_list']
+
+        if len(stationLikeList) == 0:
             # 利用图灵机器人进行对话
             return_text = tuling(text_from_user)
 
-        if sel_station_like_name_return[entityInfo.CODE] == FROMDBSETECT_ONE:
+        if len(stationLikeList) == 1:
             # 如果有一个匹配的站点，就将该站点进行返回
-            stationList = station_name_result['station_list']
-            station_name = stationList[0]["station_name"]
+            station_name = stationLikeList[0]["station_name"]
 
             # 回调自身函数查询该站点的信息
             getInfoToUser(station_name)
 
-        elif sel_station_like_name_return[entityInfo.CODE] == FROMDBSETECT_MORE:
+        elif len(stationLikeList) > 1:
             # 编辑多件站点返回给用户，让用户确认输入完整站名
-            stationList = station_name_result['station_list']
-
             rows_for_return.append("请输入完整的站名,参考如下：\n")
 
-            for station_info in stationList:
+            for station_info in stationLikeList:
                 #station_info = list(station_info)
 
                 rows_for_return.append(station_info["station_id"])
@@ -112,18 +112,19 @@ def getInfoToUser(text):
             return_text = return_text.json(rows_for_return)
 
     # 返回结果为一件或者多件的场合
-    elif station_name_result[entityInfo.CODE] == FROMDBSETECT_MORE:
-        # 查询该站名的首末班车
-        stationList = station_name_result['station_info']
-
+    elif len(stationList) > 0:
+        # 返回该站名的首末班车
         rows_for_return.append("车站名: {0}\n".format(text))
 
-        for station_info in stationList:
-            rows_for_return.append("-----------------\n")
-            rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))
-            rows_for_return.append("方向　: {0}\n".format(station_info["direction"]))
-            rows_for_return.append("首班车: {0}\n".format(station_info["weekday_first_time"]))
-            rows_for_return.append("末班车: {0}\n".format(station_info["weekday_last_time"]))
+        if station_info[0]["open_traffic"] == 0:
+            rows_for_return.append("※该站点目前尚未有开通")
+        elif:
+            for station_info in stationList:
+                rows_for_return.append("-----------------\n")
+                rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))
+                rows_for_return.append("方向　: {0}\n".format(station_info["direction"]))
+                rows_for_return.append("首班车: {0}\n".format(station_info["weekday_first_time"]))
+                rows_for_return.append("末班车: {0}\n".format(station_info["weekday_last_time"]))
 
         return_text = return_text.json(rows_for_return)
 

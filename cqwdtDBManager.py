@@ -13,33 +13,33 @@ def select_station_by_station_name(station_name):
 
     stationList = dbMgr.select_station_by_station_name(station_name)
 
-    if len(stationList) == 0:
-        dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_ZERO
+    # if len(stationList) == 0:
+    #     return_code = entityInfo.FROMDBSETECT_ZERO
 
-    elif len(stationList) > 0:
-        dict_for_return['station_list'] = stationList
-        dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_MORE
+    # elif len(stationList) > 0:
+    #     dict_for_return['station_list'] = stationList
+    #     return_code = entityInfo.FROMDBSETECT_MORE
 
     dbMgr.closeDB()
 
-    return dict_for_return
+    return dict(station_list = stationList)
 
 def select_station_like_station_name(station_name):
     dbMgr = CqwdtDBManager("cqwdt")
 
     stationList = dbMgr.select_station_like_station_name(station_name)
 
-    if len(stationList) == 0:
-        dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_ZERO
+    # if len(stationList) == 0:
+    #     dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_ZERO
 
-    elif len(stationList) == 1:
-        dict_for_return['station_list'] = stationList
-        dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_ONE
+    # elif len(stationList) == 1:
+    #     dict_for_return['station_list'] = stationList
+    #     dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_ONE
 
-    elif len(stationList) > 1:
-        dict_for_return['station_list'] = stationList
-        dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_MORE
+    # elif len(stationList) > 1:
+    #     dict_for_return['station_list'] = stationList
+    #     dict_for_return[entityInfo.CODE] = entityInfo.FROMDBSETECT_MORE
 
     dbMgr.closeDB()
 
-    return dict_for_return
+    return dict(station_list = stationList)
