@@ -116,9 +116,9 @@ def getInfoToUser(text):
         # 返回该站名的首末班车
         rows_for_return.append("车站名: {0}\n".format(text))
 
-        if station_info[0]["open_traffic"] == 0:
+        if stationList[0]["open_traffic"] == 0:
             rows_for_return.append("※该站点目前尚未有开通")
-        elif:
+        else:
             for station_info in stationList:
                 rows_for_return.append("-----------------\n")
                 rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))

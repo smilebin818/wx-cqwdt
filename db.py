@@ -4,9 +4,18 @@
 import sqlite3
 
 def dict_factory(cursor, row):
+    # by zhanglin encode to utf-8
+    row = list(row)
+    for i in range(len(row)):
+        if type(row[i]) == type(u""):
+            row[i] = row[i].encode("utf-8")
+    row = tuple(row)
+
     d = {}
+
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
+
     return d
 
 class CqwdtDBManager:
