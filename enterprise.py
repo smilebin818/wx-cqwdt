@@ -60,11 +60,13 @@ def application(environ, start_response):
     if entityInfo.direction_key_1.encode("utf-8") in text_from_user:
         stationList = text_from_user.split(entityInfo.direction_key_1.encode("utf-8"))
     # 用户信息中是否包含“至”
-    if entityInfo.direction_key_2.encode("utf-8") in text_from_user:
+    elif entityInfo.direction_key_2.encode("utf-8") in text_from_user:
         stationList = text_from_user.split(entityInfo.direction_key_2.encode("utf-8"))
     # 用户信息中是否包含“TO”
-    if entityInfo.direction_key_3.encode("utf-8") in text_from_user.upper():
+    elif entityInfo.direction_key_3.encode("utf-8") in text_from_user.upper():
         stationList = text_from_user.upper().split(entityInfo.direction_key_3.encode("utf-8"))
+    else:
+        stationList = text_from_user.split(entityInfo.direction_key_1.encode("utf-8"))
 
     # 单一站点，返回用户该站点的首末班时刻表
     if len(stationList) == 1:
@@ -93,7 +95,7 @@ def getStationToStationInfo(startStation, lastStation):
     return_flg = startStationGeoReturn["return_flg"]
     if return_flg :
         originGeo = startStationGeoReturn["geo"]
-    else
+    else:
         return startStationGeoReturn["massage_text"]
 
     lastStationGeoReturn = getGeo(lastStation, 1)
@@ -101,7 +103,7 @@ def getStationToStationInfo(startStation, lastStation):
     return_flg = lastStationGeoReturn["return_flg"]
     if return_flg :
         destinationGeo = lastStationGeoReturn["geo"]
-    else
+    else:
         return lastStationGeoReturn["massage_text"]
 
     origin = entityInfo.baidu_origin.format(originGeo)
