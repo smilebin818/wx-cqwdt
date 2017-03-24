@@ -107,7 +107,7 @@ def getStationToStationInfo(startStation, lastStation):
         return lastStationGeoReturn["massage_text"]
 
     origin = entityInfo.baidu_origin.format(originGeo)
-    destination = entityInfo.baidu_origin.format(destinationGeo)
+    destination = entityInfo.baidu_destination.format(destinationGeo)
     baidu_url = entityInfo.baidu_url.format(origin, destination)
 
     content = urllib2.urlopen(baidu_url)
@@ -133,16 +133,16 @@ def getStationToStationInfo(startStation, lastStation):
 
                     #print u"首班车:{0}".format(detail["first_time"])
                     #print u"末班车:{0}".format(detail["last_time"])
-                    rows_for_return.append("出发站:{0}".format(detail["on_station"]))
-                    rows_for_return.append("到达站:{0}".format(detail["off_station"]))
-                    rows_for_return.append("经过站:{0} 站".format(detail["stop_num"]))
-                    rows_for_return.append("轨道线:{0}".format(detail["name"]))
+                    rows_for_return.append("出发站:{0}".format(textToUTF8(detail["on_station"])))
+                    rows_for_return.append("到达站:{0}".format(textToUTF8(detail["off_station"])))
+                    rows_for_return.append("经过站:{0} 站".format(textToUTF8(detail["stop_num"])))
+                    rows_for_return.append("轨道线:{0}".format(textToUTF8(detail["name"])))
 
                 if (vehicle_info["type"] == 5) and (i != 0):
                     detail = vehicle_info["detail"]
 
                     rows_for_return.append("------------------------------")
-                    rows_for_return.append(steps[i][0]["instructions"])
+                    rows_for_return.append(textToUTF8(steps[i][0]["instructions"]))
                     rows_for_return.append("------------------------------")
 
                 return_text = "".join(rows_for_return)
@@ -164,14 +164,14 @@ def getGeo(station, station_flg):
     ret = {}
     rows_for_return = []
 
-    stationByNameResult = cqwdtDBManager.select_station_by_station_name(text)
+    stationByNameResult = cqwdtDBManager.select_station_by_station_name(station)
 
     stationList = stationByNameResult['station_list']
 
     # 返回结果为零件
     if len(stationList) == 0:
         # 进行模糊查询
-        stationLikeNameReturn = cqwdtDBManager.select_station_like_station_name(text)
+        stationLikeNameReturn = cqwdtDBManager.select_station_like_station_name(station)
 
         stationLikeList = stationLikeNameReturn['station_list']
 
@@ -353,6 +353,10 @@ def tuling(text):
 
     return content["text"]
 
+
+# 转码格式： UTF-8
+def textToUTF8(text):
+    return text.encode("utf-8")
 
 # def createMenu():
 
