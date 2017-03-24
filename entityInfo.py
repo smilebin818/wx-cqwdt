@@ -3,6 +3,7 @@
 
 from wechat_sdk import WechatConf
 
+# ============================微信相关的定义 Start=====================================
 myToken          = "smilebinToken"
 myAppId          = "wx692ad34a8ba6feff"
 myAppsecret      = "cabff21c726d3b2b2a9ae94d9daa039a"
@@ -16,9 +17,22 @@ conf = WechatConf(
     encoding_aes_key='NyI5ok2QSd59c3MheyDfWpzHen3KmY3bwc8noyBkFHg'  # 如果传入此值则必须保证同时传入 token, appid
 )
 
-# 方向性文字 比如：光电园到花卉园
-direction_key = u"到"
+# ============================微信相关的定义 End=======================================
 
+# ============================百度地图相关的定义 Start==================================
+
+baidu_origin = "origin={0}"
+baidu_destination = "&destination={0}"
+baidu_ak = "&ak=1ce6987ff4bbe857f40cfaf6b99cd050" 
+baidu_url = "http://api.map.baidu.com/direction/v2/transit?{0}{1}&ak=1ce6987ff4bbe857f40cfaf6b99cd050"
+
+# ============================百度地图相关的定义 End====================================
+
+# ============================程序相关的定义 Start=====================================
+# 方向性文字 比如：光电园到花卉园
+direction_key_1 = u"到"
+direction_key_2 = u"至"
+direction_key_3 = u"TO"
 
 
 # 返回结果用的Key
@@ -29,37 +43,4 @@ FROMDBSETECT_ZERO   = 4001 # 返回结果为零件的对应CODE
 FROMDBSETECT_ONE    = 1000 # 返回结果为一件的对应CODE
 FROMDBSETECT_MORE   = 1001 # 返回结果为多件的对应CODE
 
-# menu_data = {
-#     'button':[
-#         {
-#             'type': 'click',
-#             'name': '今日歌曲',
-#             'key': 'V1001_TODAY_MUSIC'
-#         },
-#         {
-#             'type': 'click',
-#             'name': '歌手简介',
-#             'key': 'V1001_TODAY_SINGER'
-#         },
-#         {
-#             'name': '菜单',
-#             'sub_button': [
-#                 {
-#                     'type': 'view',
-#                     'name': '搜索',
-#                     'url': 'http://www.soso.com/'
-#                 },
-#                 {
-#                     'type': 'view',
-#                     'name': '视频',
-#                     'url': 'http://v.qq.com/'
-#                 },
-#                 {
-#                     'type': 'click',
-#                     'name': '赞一下我们',
-#                     'key': 'V1001_GOOD'
-#                 }
-#             ]
-#         }
-#     ]
-# }
+# ============================程序相关的定义 End=======================================
