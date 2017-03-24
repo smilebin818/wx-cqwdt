@@ -353,17 +353,9 @@ def tuling(text):
 
     return content["text"]
 
-
 # 转码格式： UTF-8
 def textToUTF8(text):
-    return text.encode("utf-8")
-
-# def createMenu():
-
-    # 获取 access_token
-    # getAccessToken = wechat.get_access_token()
-
-    # access_token = getAccessToken.get('access_token', None)
-    # access_token = access_token[0] if access_token else access_token
-
-    # wechat.create_menu(entityInfo.menu_data)
+    if type(text) == type(u""):
+        return text.encode("utf-8")
+    else:
+        return text
