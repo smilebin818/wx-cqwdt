@@ -126,11 +126,11 @@ def getStationToStationInfo(startStation, lastStation):
         if routesList :
             steps = routesList[0]["steps"]
 
+            rows_for_return.append("路　线: {0}⇒{1}\n".format(startStation, lastStation))
+            rows_for_return.append("====================\n")
+
             for i in range(len(steps)):
                 vehicle_info = steps[i][0]["vehicle_info"]
-
-                rows_for_return.append("路　线: {0} ⇒ {1}\n".format(startStation, lastStation))
-                rows_for_return.append("==============================\n")
 
                 if vehicle_info["type"] == 3:
                     detail = vehicle_info["detail"]
@@ -145,10 +145,10 @@ def getStationToStationInfo(startStation, lastStation):
                 if (vehicle_info["type"] == 5) and (i != 0):
                     detail = vehicle_info["detail"]
 
-                    rows_for_return.append("------------------------------\n")
+                    rows_for_return.append("--------------------\n")
                     rows_for_return.append(textToUTF8(steps[i][0]["instructions"]))
                     rows_for_return.append("\n")
-                    rows_for_return.append("------------------------------\n")
+                    rows_for_return.append("--------------------\n")
 
                 return_text = "".join(rows_for_return)
 
@@ -205,7 +205,7 @@ def getGeo(station, station_flg):
 
                 rows_for_return.append("--------------------\n")
                 #rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))
-                rows_for_return.append("※该站点目前尚未开通")
+                rows_for_return.append("※该站点目前尚未开通\n")
                 rows_for_return.append("※输入附近站点再查询")
 
                 # 查询没有结果
@@ -256,7 +256,7 @@ def getGeo(station, station_flg):
 
             rows_for_return.append("--------------------\n")
             #rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))
-            rows_for_return.append("※该站点目前尚未开通")
+            rows_for_return.append("※该站点目前尚未开通\n")
             rows_for_return.append("※输入附近站点再查询")
 
             # 查询没有结果
