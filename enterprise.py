@@ -95,6 +95,7 @@ def getStationToStationInfo(startStation, lastStation):
     return_flg = startStationGeoReturn["return_flg"]
     if return_flg :
         originGeo = startStationGeoReturn["geo"]
+        startStation = startStationGeoReturn["station_name"]
     else:
         return startStationGeoReturn["massage_text"]
 
@@ -103,6 +104,7 @@ def getStationToStationInfo(startStation, lastStation):
     return_flg = lastStationGeoReturn["return_flg"]
     if return_flg :
         destinationGeo = lastStationGeoReturn["geo"]
+        lastStation = lastStationGeoReturn["station_name"]
     else:
         return lastStationGeoReturn["massage_text"]
 
@@ -121,29 +123,32 @@ def getStationToStationInfo(startStation, lastStation):
 
         routesList = content["result"]["routes"]
 
-
         if routesList :
             steps = routesList[0]["steps"]
 
             for i in range(len(steps)):
                 vehicle_info = steps[i][0]["vehicle_info"]
 
+                rows_for_return.append("路　线: {0} ⇒ {1}\n".format(startStation, lastStation))
+                rows_for_return.append("==============================\n")
+
                 if vehicle_info["type"] == 3:
                     detail = vehicle_info["detail"]
 
                     #print u"首班车:{0}".format(detail["first_time"])
                     #print u"末班车:{0}".format(detail["last_time"])
-                    rows_for_return.append("出发站:{0}".format(textToUTF8(detail["on_station"])))
-                    rows_for_return.append("到达站:{0}".format(textToUTF8(detail["off_station"])))
-                    rows_for_return.append("经过站:{0} 站".format(textToUTF8(detail["stop_num"])))
-                    rows_for_return.append("轨道线:{0}".format(textToUTF8(detail["name"])))
+                    rows_for_return.append("出发站: {0}\n".format(textToUTF8(detail["on_station"])))
+                    rows_for_return.append("到达站: {0}\n".format(textToUTF8(detail["off_station"])))
+                    rows_for_return.append("经过站: {0} 站\n".format(textToUTF8(detail["stop_num"])))
+                    rows_for_return.append("轨道线: {0}\n".format(textToUTF8(detail["name"])))
 
                 if (vehicle_info["type"] == 5) and (i != 0):
                     detail = vehicle_info["detail"]
 
-                    rows_for_return.append("------------------------------")
+                    rows_for_return.append("------------------------------\n")
                     rows_for_return.append(textToUTF8(steps[i][0]["instructions"]))
-                    rows_for_return.append("------------------------------")
+                    rows_for_return.append("\n")
+                    rows_for_return.append("------------------------------\n")
 
                 return_text = "".join(rows_for_return)
 
@@ -208,37 +213,60 @@ def getGeo(station, station_flg):
                 ret["massage_text"] = "".join(rows_for_return)
 
             else:
+                ret["station_name"] = stationLikeList[0]["station_name"]
                 ret["return_flg"] = 1
                 ret["geo"] = stationLikeList[0]["geo"]
 
-            
         elif len(stationLikeList) > 1:
             stationLikeNewList = getNotIterateList(stationLikeList)
 
-            if station_flg == 0:
-                rows_for_return.append("起点站\"{0}\"太模糊\n".format(station))
+            if len(stationLikeNewList) == 1:
+                ret["station_name"] = stationLikeNewList[0]["station_name"]
+                ret["return_flg"] = 1
+                ret["geo"] = stationLikeNewList[0]["geo"]
             else:
-                rows_for_return.append("终点站\"{0}\"太模糊\n".format(station))
+                if station_flg == 0:
+                    rows_for_return.append("起点站\"{0}\"太模糊\n".format(station))
+                else:
+                    rows_for_return.append("终点站\"{0}\"太模糊\n".format(station))
 
-            rows_for_return.append("※请确认你要输入的车站\n")
+                rows_for_return.append("※请确认你要输入的车站\n")
+                rows_for_return.append("--------------------\n")
+
+                for station_info in stationLikeList:
+                    #station_info = list(station_info)
+
+                    rows_for_return.append(station_info["station_id"])
+                    rows_for_return.append(": ")
+                    rows_for_return.append(station_info["station_name"])
+                    rows_for_return.append("\n")
+
+                # 查询没有结果
+                ret["return_flg"] = 0
+                ret["massage_text"] = "".join(rows_for_return)
+
+    # 返回结果为一件或者多件的场合，返回第一件的经纬度即可
+    elif len(stationList) > 0:
+        if int(stationList[0]["open_traffic"]) == 0:
+
+            if station_flg == 0:
+                rows_for_return.append("起点站: {0}\n".format(station))
+            else:
+                rows_for_return.append("终点站: {0}\n".format(station))
+
             rows_for_return.append("--------------------\n")
-
-            for station_info in stationLikeList:
-                #station_info = list(station_info)
-
-                rows_for_return.append(station_info["station_id"])
-                rows_for_return.append(": ")
-                rows_for_return.append(station_info["station_name"])
-                rows_for_return.append("\n")
+            #rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))
+            rows_for_return.append("※该站点目前尚未开通")
+            rows_for_return.append("※输入附近站点再查询")
 
             # 查询没有结果
             ret["return_flg"] = 0
             ret["massage_text"] = "".join(rows_for_return)
 
-    # 返回结果为一件或者多件的场合，返回第一件的经纬度即可
-    elif len(stationList) > 0:
-        ret["return_flg"] = 1
-        ret["geo"] = stationList[0]["geo"]
+        else:
+            ret["station_name"] = station
+            ret["return_flg"] = 1
+            ret["geo"] = stationList[0]["geo"]
 
     return ret
 
