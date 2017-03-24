@@ -63,6 +63,9 @@ def application(environ, start_response):
         helpList.append("③： 可以和\"微地铁\"进行聊天哟(比如让它给讲个笑话)：\n")
 
         text_to_user = "".join(helpList)
+        text_to_user = wechat.response_text(text_to_user, "true")
+
+        return text_to_user.encode("utf-8")
 
     stationList = []
 
@@ -87,13 +90,13 @@ def application(environ, start_response):
         rows_for_return = []
 
         if stationList[0] == "":
-            rows_for_return.append("※出发站目前不能为空")
+            rows_for_return.append("出发站目前不能为空\n")
             rows_for_return.append("※查询规则，请输入\"help\"")
 
             text_to_user = "".join(rows_for_return)
 
         elif stationList[1] == "":
-            rows_for_return.append("※终点站不能为空")
+            rows_for_return.append("终点站不能为空\n")
             rows_for_return.append("※查询规则，请输入\"help\"")
 
             text_to_user = "".join(rows_for_return)
