@@ -53,7 +53,17 @@ def application(environ, start_response):
 
     # 返回给用户的信息
     text_to_user = ""
-    
+
+
+    if text_from_user.strip() == "help":
+        helpList = []
+        helpList.append("目前支持以下功能：\n")
+        helpList.append("①： 站点到站点的换乘路线查询(如: 茶园到红旗河沟)\n")
+        helpList.append("②： 查询地铁站的首末班车时间(输入车站名称即可)\n")
+        helpList.append("③： 可以和\"微地铁\"进行聊天哟(比如让它给讲个笑话)：\n")
+
+        text_to_user = "".join(helpList)
+
     stationList = []
 
     # 用户信息中是否包含“到”
@@ -74,11 +84,34 @@ def application(environ, start_response):
 
     # 站点到站点：红旗河沟到光电园  返回换乘路径（调用百度API）
     elif len(stationList) == 2:
-        text_to_user = getStationToStationInfo(stationList[0], stationList[1])
+        rows_for_return = []
+
+        if stationList[0] == "":
+            rows_for_return.append("※出发站目前不能为空")
+            rows_for_return.append("※查询规则，请输入\"help\"")
+
+            text_to_user = "".join(rows_for_return)
+
+        elif stationList[1] == "":
+            rows_for_return.append("※终点站不能为空")
+            rows_for_return.append("※查询规则，请输入\"help\"")
+
+            text_to_user = "".join(rows_for_return)
+
+        elif stationList[0] == stationList[1]:
+            rows_for_return.append("出发站: {0}\n".format(stationList[0]))
+            rows_for_return.append("终点站: {0}\n".format(stationList[1]))
+            rows_for_return.append("--------------------\n")
+            rows_for_return.append("※出发站和终点站不能相同\n")
+
+            text_to_user = "".join(rows_for_return)
+
+        else:
+            text_to_user = getStationToStationInfo(stationList[0], stationList[1])
 
     # 用户输入多个关键字的时候返给用户信息：
     elif len(stationList) > 2:
-        text_to_user = "查询站点到站点的规则:\n①\"A站\" 到 \"B站\"\n　②\"A站\" 至 \"B站\"\n　③\"A站\" to \"B站\"\n例： 茶园到光电园"
+        text_to_user = "查询站点到站点的规则:\n① \"A站\" 到 \"B站\"\n② \"A站\" 至 \"B站\"\n③ \"A站\" to \"B站\"\n例： 茶园到光电园"
 
     text_to_user = wechat.response_text(text_to_user, "true")
 
@@ -125,9 +158,11 @@ def getStationToStationInfo(startStation, lastStation):
 
         if routesList :
             steps = routesList[0]["steps"]
+            price_detail = routesList[0]["price_detail"]
 
             rows_for_return.append("路　线: {0}⇒{1}\n".format(startStation, lastStation))
-            rows_for_return.append("====================\n")
+            rows_for_return.append("票　价: {0} 元\n".format(textToUTF8(price_detail[0]["ticket_price"])))
+            rows_for_return.append("==================\n")
 
             for i in range(len(steps)):
                 vehicle_info = steps[i][0]["vehicle_info"]
