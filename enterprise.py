@@ -54,13 +54,15 @@ def application(environ, start_response):
     # 返回给用户的信息
     text_to_user = ""
 
+    text_from_user = text_from_user.strip().upper()
 
-    if text_from_user.strip() == "help":
+    if text_from_user == "HELP" or text_from_user == "帮助":
         helpList = []
         helpList.append("目前支持以下功能：\n")
+        helpList.append("--------------------\n")
         helpList.append("①： 站点到站点的换乘路线查询(如: 茶园到红旗河沟)\n")
         helpList.append("②： 查询地铁站的首末班车时间(输入车站名称即可)\n")
-        helpList.append("③： 可以和\"微地铁\"进行聊天哟(比如让它给讲个笑话)：\n")
+        helpList.append("③： 可以和\"微地铁\"进行聊天哟(比如让它给讲个笑话)\n")
 
         text_to_user = "".join(helpList)
         text_to_user = wechat.response_text(text_to_user, "true")
@@ -91,13 +93,13 @@ def application(environ, start_response):
 
         if stationList[0] == "":
             rows_for_return.append("出发站目前不能为空\n")
-            rows_for_return.append("※查询规则，请输入\"help\"")
+            rows_for_return.append("※查询规则,请输入\"help\"")
 
             text_to_user = "".join(rows_for_return)
 
         elif stationList[1] == "":
             rows_for_return.append("终点站不能为空\n")
-            rows_for_return.append("※查询规则，请输入\"help\"")
+            rows_for_return.append("※查询规则,请输入\"help\"")
 
             text_to_user = "".join(rows_for_return)
 
@@ -175,12 +177,12 @@ def getStationToStationInfo(startStation, lastStation):
 
                     #print u"首班车:{0}".format(detail["first_time"])
                     #print u"末班车:{0}".format(detail["last_time"])
+                    rows_for_return.append("轨道线: {0}\n".format(textToUTF8(detail["name"])))
                     rows_for_return.append("出发站: {0}\n".format(textToUTF8(detail["on_station"])))
                     rows_for_return.append("到达站: {0}\n".format(textToUTF8(detail["off_station"])))
                     rows_for_return.append("经过站: {0} 站\n".format(textToUTF8(detail["stop_num"])))
-                    rows_for_return.append("轨道线: {0}\n".format(textToUTF8(detail["name"])))
 
-                if (vehicle_info["type"] == 5) and (i != 0):
+                if (vehicle_info["type"] == 5) and (i != 0) and (i != (len(steps) -1)):
                     detail = vehicle_info["detail"]
 
                     rows_for_return.append("--------------------\n")
