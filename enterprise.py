@@ -60,9 +60,9 @@ def application(environ, start_response):
         helpList = []
         helpList.append("目前支持以下功能：\n")
         helpList.append("--------------------\n")
-        helpList.append("①： 站点到站点的换乘路线查询(如: 茶园到红旗河沟)\n")
-        helpList.append("②： 查询地铁站的首末班车时间(输入车站名称即可)\n")
-        helpList.append("③： 可以和\"微地铁\"进行聊天哟(比如让它给讲个笑话)\n")
+        helpList.append("①： 站点到站点的换乘路线\n   (如: 茶园到红旗河沟)\n")
+        helpList.append("②： 查询地铁站的首末班车\n   (输入车站名称即可)\n")
+        helpList.append("③： 可以和\"小微\"进行聊天\n   (比如让它给讲个笑话)\n")
 
         text_to_user = "".join(helpList)
         text_to_user = wechat.response_text(text_to_user, "true")
