@@ -154,9 +154,10 @@ def getStationToStationInfo(startStationB, lastStationB):
     # 如果起点站和终点站是同一个站点的时候
     if startStation == lastStation:
         rows_for_return.append("查询到你输入的站点：\n")
+        rows_for_return.append("--------------------\n")
         rows_for_return.append("出发站: {0}⇒{1}\n".format(startStationB, startStation))
         rows_for_return.append("到达站: {0}⇒{1}\n".format(lastStationB, lastStation))
-        rows_for_return.append("※出发站和终点站不能相同")
+        rows_for_return.append("※出发站和到达站不能相同")
 
         return "".join(rows_for_return)
 
