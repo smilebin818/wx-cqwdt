@@ -179,9 +179,18 @@ def getStationToStationInfo(startStationB, lastStationB):
         if routesList :
             steps = routesList[0]["steps"]
             price_detail = routesList[0]["price_detail"]
+            duration = routesList[0]["duration"]/60 #得到分钟数 TODO 危险（万一得到小数咋办！？）
 
             rows_for_return.append("路　线: {0}⇒{1}\n".format(startStation, lastStation))
             rows_for_return.append("票　价: {0} 元\n".format(textToUTF8(price_detail[0]["ticket_price"])))
+
+            if duration > 59.59:
+                shour = duration/60
+                sminute = duration%60
+                rows_for_return.append("预　计: {0}小时{1}分钟到达\n".format(shour, sminute))
+            else:
+                rows_for_return.append("预　计: {0}分钟到达".format(duration))
+
             rows_for_return.append("==================\n")
 
             for i in range(len(steps)):
