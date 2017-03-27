@@ -123,12 +123,17 @@ def application(environ, start_response):
     return text_to_user.encode("utf-8")
 
 # 查询站点到站点的换乘路径
-def getStationToStationInfo(startStation, lastStation):
-    return_text = ""
+def getStationToStationInfo(startStationB, lastStationB):
     originGeo = ""
     destinationGeo = ""
 
-    startStationGeoReturn = getGeo(startStation, 0)
+    startStation = ""
+    lastStation = ""
+
+    return_text = ""
+    rows_for_return = []
+
+    startStationGeoReturn = getGeo(startStationB, 0)
 
     return_flg = startStationGeoReturn["return_flg"]
     if return_flg :
@@ -137,7 +142,7 @@ def getStationToStationInfo(startStation, lastStation):
     else:
         return startStationGeoReturn["massage_text"]
 
-    lastStationGeoReturn = getGeo(lastStation, 1)
+    lastStationGeoReturn = getGeo(lastStationB, 1)
 
     return_flg = lastStationGeoReturn["return_flg"]
     if return_flg :
@@ -145,6 +150,15 @@ def getStationToStationInfo(startStation, lastStation):
         lastStation = lastStationGeoReturn["station_name"]
     else:
         return lastStationGeoReturn["massage_text"]
+
+    # 如果起点站和终点站是同一个站点的时候
+    if startStation == lastStation:
+        rows_for_return.append("查询到你输入的站点：\n")
+        rows_for_return.append("出发站: {0}⇒{1}\n".format(startStationB, startStation))
+        rows_for_return.append("到达站: {0}⇒{1}\n".format(lastStationB, lastStation))
+        rows_for_return.append("※出发站和终点站不能相同")
+
+        return "".join(rows_for_return)
 
     origin = entityInfo.baidu_origin.format(originGeo)
     destination = entityInfo.baidu_destination.format(destinationGeo)
