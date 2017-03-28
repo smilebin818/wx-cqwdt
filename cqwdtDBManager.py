@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from db import CqwdtDBManager
+from pypinyin import pinyin, lazy_pinyin
 
 import entityInfo
 
@@ -13,12 +14,12 @@ def select_station_by_station_name(station_name):
 
     stationList = dbMgr.select_station_by_station_name(station_name)
 
-    # if len(stationList) == 0:
-    #     return_code = entityInfo.FROMDBSETECT_ZERO
+    if len(stationList) == 0:
+        # 中文转拼音
+        stationPyList = lazy_pinyin(unicode(station_name))
+        stationPy = "".join(stationPyList)
 
-    # elif len(stationList) > 0:
-    #     dict_for_return['station_list'] = stationList
-    #     return_code = entityInfo.FROMDBSETECT_MORE
+        stationList = dbMgr.select_station_by_station_py(stationPy)
 
     dbMgr.closeDB()
 

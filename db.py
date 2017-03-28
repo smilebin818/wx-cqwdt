@@ -3,6 +3,8 @@
 
 import sqlite3
 
+from pypinyin import pinyin, lazy_pinyin
+
 def dict_factory(cursor, row):
     # by zhanglin encode to utf-8
     row = list(row)
@@ -43,6 +45,10 @@ class CqwdtDBManager:
     # 根据车站名称进行查询
     def select_station_by_station_name(self, station_name):
         return self.c.execute("SELECT * FROM station st LEFT JOIN schedule sc ON st.station_id = sc.station_id WHERE st.station_name = '{0}' ORDER BY station_id".format(station_name)).fetchall()
+
+    # 根据车站拼音进行查询
+    def select_station_by_station_py(self, station_py):
+        return self.c.execute("SELECT * FROM station st LEFT JOIN schedule sc ON st.station_id = sc.station_id WHERE st.station_py = '{0}' ORDER BY station_id".format(station_py)).fetchall()
 
     # 根据车站名称进行模糊查询
     def select_station_like_station_name(self, station_name):
