@@ -48,6 +48,17 @@ def application(environ, start_response):
     # 解析用户信息
     wechat.parse_data(getRequestBody(environ))
 
+    # 用户关注事件
+    if wechat.message.type == 'subscribe':
+        subscribeStr = "感谢你的关注\n{0}".format(getHelpStr())
+        text_to_user = wechat.response_text(subscribeStr, "true")
+
+        return text_to_user.encode("utf-8")
+
+    # 用户取消关注事件
+    elif wechat.message.type == 'unsubscribe':
+        return ""
+
     # 获得的用户输入信息
     text_from_user = wechat.message.content.encode("utf-8")
 
@@ -57,15 +68,7 @@ def application(environ, start_response):
     text_from_user = text_from_user.strip().upper()
 
     if text_from_user == "HELP" or text_from_user == "帮助":
-        helpList = []
-        helpList.append("目前支持以下功能：\n")
-        helpList.append("--------------------\n")
-        helpList.append("①： 站点到站点的换乘路线\n   (如: 茶园到红旗河沟)\n")
-        helpList.append("②： 查询地铁站的首末班车\n   (输入车站名称即可)\n")
-        helpList.append("③： 可以和\"小微\"进行聊天\n   (比如让它给讲个笑话)\n")
-
-        text_to_user = "".join(helpList)
-        text_to_user = wechat.response_text(text_to_user, "true")
+        text_to_user = wechat.response_text(getHelpStr(), "true")
 
         return text_to_user.encode("utf-8")
 
@@ -457,3 +460,14 @@ def textToUTF8(text):
         return text.encode("utf-8")
     else:
         return text
+
+# 帮助说明
+def getHelpStr():
+    helpList = []
+    helpList.append("目前支持以下功能：\n")
+    helpList.append("--------------------\n")
+    helpList.append("①： 站点到站点的换乘路线\n   (如: 茶园到红旗河沟)\n")
+    helpList.append("②： 查询地铁站的首末班车\n   (输入车站名称即可)\n")
+    helpList.append("③： 可以和\"小微\"进行聊天\n   (比如让它给讲个笑话)\n")
+
+    return "".join(helpList)
