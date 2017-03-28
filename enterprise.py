@@ -50,7 +50,7 @@ def application(environ, start_response):
 
     # 用户关注事件
     if wechat.message.type == 'subscribe':
-        subscribeStr = "感谢你的关注\n{0}".format(getHelpStr())
+        subscribeStr = "感谢你的关注\n\n{0}".format(getHelpStr())
         text_to_user = wechat.response_text(subscribeStr, "true")
 
         return text_to_user.encode("utf-8")
