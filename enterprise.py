@@ -85,7 +85,10 @@ def application(environ, start_response):
 
     # 单一站点，返回用户该站点的首末班时刻表
     if len(stationList) == 1:
-        text_to_user = getInfoToUser(stationList[0].strip())
+        try:
+            text_to_user = getInfoToUser(stationList[0].strip())
+        except Exception as e:
+            text_to_user = "发这样的消息，让我说你什么好呢!"
 
     # 站点到站点：红旗河沟到光电园  返回换乘路径（调用百度API）
     elif len(stationList) == 2:
@@ -112,7 +115,10 @@ def application(environ, start_response):
             text_to_user = "".join(rows_for_return)
 
         else:
-            text_to_user = getStationToStationInfo(stationList[0], stationList[1])
+            try:
+                text_to_user = getStationToStationInfo(stationList[0], stationList[1])
+            except Exception as e:
+                text_to_user = "好像你输入了非法的字符，让我不能处理咧!"
 
     # 用户输入多个关键字的时候返给用户信息：
     elif len(stationList) > 2:
