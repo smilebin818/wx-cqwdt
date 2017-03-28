@@ -314,9 +314,9 @@ def getGeo(station, station_flg):
         if int(stationList[0]["open_traffic"]) == 0:
 
             if station_flg == 0:
-                rows_for_return.append("起点站: {0}\n".format(station))
+                rows_for_return.append("起点站: {0}\n".format(stationList[0]["station_name"]))
             else:
-                rows_for_return.append("终点站: {0}\n".format(station))
+                rows_for_return.append("终点站: {0}\n".format(stationList[0]["station_name"]))
 
             rows_for_return.append("--------------------\n")
             #rows_for_return.append("列车线: {0}{1}\n".format(station_info["city"], station_info["metro"]))
@@ -328,7 +328,7 @@ def getGeo(station, station_flg):
             ret["massage_text"] = "".join(rows_for_return)
 
         else:
-            ret["station_name"] = station
+            ret["station_name"] = stationList[0]["station_name"]
             ret["return_flg"] = 1
             ret["geo"] = stationList[0]["geo"]
 
@@ -388,7 +388,7 @@ def getInfoToUser(text):
     # 返回结果为一件或者多件的场合
     elif len(stationList) > 0:
         # 返回该站名的首末班车
-        rows_for_return.append("车站名: {0}\n".format(text))
+        rows_for_return.append("车站名: {0}\n".format(stationList[0]["station_name"]))
 
         if int(stationList[0]["open_traffic"]) == 0:
             rows_for_return.append("--------------------\n")

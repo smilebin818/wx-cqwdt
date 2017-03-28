@@ -14,10 +14,11 @@ def select_station_by_station_name(station_name):
 
     stationList = dbMgr.select_station_by_station_name(station_name)
 
+    # 没有结果的时候，用拼音
     if len(stationList) == 0:
-        # 中文转拼音
-        stationPyList = lazy_pinyin(unicode(station_name))
-        stationPy = "".join(stationPyList)
+        # 中文转拼音 全小写
+        stationPyList = lazy_pinyin(unicode(station_name.decode("utf-8")))
+        stationPy = "".join(stationPyList).lower()
 
         stationList = dbMgr.select_station_by_station_py(stationPy)
 
