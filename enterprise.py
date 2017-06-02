@@ -50,7 +50,7 @@ def application(environ, start_response):
 
     # 用户关注事件
     if wechat.message.type == 'subscribe':
-        subscribeStr = "感谢你的关注\n\n{0}".format(getHelpStr())
+        subscribeStr = "感谢你的关注\n{0}\n{1}\n{2}".format("--------------------","已开通小程序【轨刻地铁】",getHelpStr())
         text_to_user = wechat.response_text(subscribeStr, "true")
 
         return text_to_user.encode("utf-8")
@@ -464,10 +464,10 @@ def textToUTF8(text):
 # 帮助说明
 def getHelpStr():
     helpList = []
-    helpList.append("目前支持以下功能：\n")
+    helpList.append("微地铁目前支持以下功能：\n")
     helpList.append("--------------------\n")
     helpList.append("①： 站点到站点的换乘路线\n   (如: 茶园到红旗河沟)\n")
     helpList.append("②： 查询地铁站的首末班车\n   (输入车站名称即可)\n")
-    helpList.append("微地铁已开通小程序\n【轨刻地铁】,该有的都有了\n")
+    helpList.append("③： 可以和\"小微\"进行聊天\n   (比如让它给讲个笑话)\n")
 
     return "".join(helpList)
