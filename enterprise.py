@@ -468,6 +468,6 @@ def getHelpStr():
     helpList.append("--------------------\n")
     helpList.append("①： 站点到站点的换乘路线\n   (如: 茶园到红旗河沟)\n")
     helpList.append("②： 查询地铁站的首末班车\n   (输入车站名称即可)\n")
-    helpList.append("③： 可以和\"小微\"进行聊天\n   (比如让它给讲个笑话)\n")
+    helpList.append("微地铁已开通小程序\n【轨刻地铁】,该有的都有了\n")
 
     return "".join(helpList)
