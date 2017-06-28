@@ -72,9 +72,12 @@ def application(environ, start_response):
         text_to_user = wechat.response_text(getHelpStr(), "true")
 
         return text_to_user.encode("utf-8")
-    elif "线路图" in text_from_user or "运行图" in text_from_user or "地铁图" in text_from_user or "地铁图" in text_from_user:
+    elif "线路" in text_from_user or "运行图" in text_from_user or "地铁图" in text_from_user or "号线" in text_from_user:
 
-        return "点击右上角\n选择小程序【轨刻地铁】\n进行查看你想要的信息".encode("utf-8")
+        text_to_user = "点击右上角\n选择小程序【轨刻地铁】\n你要的信息都在里面"
+        text_to_user = wechat.response_text(text_to_user, "true")
+
+        return text_to_user.encode("utf-8")
 
     stationList = []
 
