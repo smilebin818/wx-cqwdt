@@ -4,7 +4,8 @@
 from wechat_sdk import WechatBasic
 from cgi import parse_qs, escape
 
-import urllib, urllib2
+import urllib
+import urllib2
 import json
 
 import entityInfo
@@ -71,6 +72,9 @@ def application(environ, start_response):
         text_to_user = wechat.response_text(getHelpStr(), "true")
 
         return text_to_user.encode("utf-8")
+    elif "线路图" in text_from_user or "运行图" in text_from_user or "地铁图" in text_from_user or "地铁图" in text_from_user:
+
+        return "点击右上角\n选择小程序【轨刻地铁】\n进行查看你想要的信息".encode("utf-8")
 
     stationList = []
 

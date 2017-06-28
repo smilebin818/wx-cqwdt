@@ -4,10 +4,14 @@
 from db import CqwdtDBManager
 from pypinyin import pinyin, lazy_pinyin
 
+import sys
 import entityInfo
 
 
 def select_station_by_station_name(station_name):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
     dict_for_return = []
 
     dbMgr = CqwdtDBManager("cqwdt")
@@ -27,6 +31,9 @@ def select_station_by_station_name(station_name):
     return dict(station_list = stationList)
 
 def select_station_like_station_name(station_name):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
     dbMgr = CqwdtDBManager("cqwdt")
 
     stationList = dbMgr.select_station_like_station_name(station_name)
