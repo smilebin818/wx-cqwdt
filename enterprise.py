@@ -265,19 +265,23 @@ def getGeo(station, station_flg):
         stationLikeList = stationLikeNameReturn['station_list']
 
         if len(stationLikeList) == 0:
-
-            if station_flg == 0:
-                rows_for_return.append("起点站: {0}\n".format(station))
+            # 判断用户输入的站点是不是最后一个字带“站”：去掉该字，再查找一次
+            if station[-1] == "站":
+                # 回调自身函数查询该站点的信息
+                getGeo(station[:-1], station_flg)
             else:
-                rows_for_return.append("终点站: {0}\n".format(station))
+                if station_flg == 0:
+                    rows_for_return.append("起点站: {0}\n".format(station))
+                else:
+                    rows_for_return.append("终点站: {0}\n".format(station))
 
-            rows_for_return.append("--------------------\n")
-            rows_for_return.append("※没有查询到该站点\n")
-            rows_for_return.append("※确认站点名后再试\n")
+                rows_for_return.append("--------------------\n")
+                rows_for_return.append("※没有查询到该站点\n")
+                rows_for_return.append("※确认站点名后再试\n")
 
-            # 查询没有结果
-            ret["return_flg"] = 0
-            ret["massage_text"] = "".join(rows_for_return)
+                # 查询没有结果
+                ret["return_flg"] = 0
+                ret["massage_text"] = "".join(rows_for_return)
         
         # 如果有一个匹配的站点，返回该站点的信息（经纬度）
         elif len(stationLikeList) == 1:
@@ -372,13 +376,8 @@ def getInfoToUser(text):
         stationLikeList = stationLikeNameReturn['station_list']
 
         if len(stationLikeList) == 0:
-            # 判断用户输入的站点是不是最后一个字带“站”：去掉该字，再查找一次
-            if text[-1] == "站":
-                # 回调自身函数查询该站点的信息
-                return getInfoToUser(text[:-1])
-            else:
-                # 利用图灵机器人进行对话
-                return_text = tuling(text)
+            # 利用图灵机器人进行对话
+            return_text = tuling(text)
 
         if len(stationLikeList) == 1:
             # 如果有一个匹配的站点，就将该站点进行返回
