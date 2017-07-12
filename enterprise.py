@@ -124,6 +124,10 @@ def application(environ, start_response):
 
             text_to_user = "".join(rows_for_return)
 
+            # 用户输入的情信息中有解放碑
+        elif "解放碑" in stationList[0] or "解放碑" in stationList[1]:
+            text_to_user = "[解放碑]地铁站目前没有开通，请输入[小什子]再试"
+
         else:
             try:
                 text_to_user = getStationToStationInfo(stationList[0], stationList[1])
@@ -368,8 +372,13 @@ def getInfoToUser(text):
         stationLikeList = stationLikeNameReturn['station_list']
 
         if len(stationLikeList) == 0:
-            # 利用图灵机器人进行对话
-            return_text = tuling(text)
+            # 判断用户输入的站点是不是最后一个字带“站”：去掉该字，再查找一次
+            if text[-1] == "站":
+                # 回调自身函数查询该站点的信息
+                return getInfoToUser(text[:-1])
+            else
+                # 利用图灵机器人进行对话
+                return_text = tuling(text)
 
         if len(stationLikeList) == 1:
             # 如果有一个匹配的站点，就将该站点进行返回
