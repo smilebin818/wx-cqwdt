@@ -376,7 +376,7 @@ def getInfoToUser(text):
             if text[-1] == "站":
                 # 回调自身函数查询该站点的信息
                 return getInfoToUser(text[:-1])
-            else
+            else:
                 # 利用图灵机器人进行对话
                 return_text = tuling(text)
 
