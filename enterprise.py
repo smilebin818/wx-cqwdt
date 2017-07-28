@@ -126,7 +126,7 @@ def application(environ, start_response):
 
             # 用户输入的情信息中有解放碑
         elif "解放碑" in stationList[0] or "解放碑" in stationList[1]:
-            text_to_user = "[解放碑]地铁站目前没有开通，请输入[小什子]再试"
+            text_to_user = "[解放碑]地铁站目前没有开通，请输入[小什字]再试"
 
         else:
             try:
